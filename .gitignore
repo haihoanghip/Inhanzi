@@ -17,3 +17,6 @@ backend/public/uploads/
 
 # VSCode
 .vscode/
+
+# Note
+/NOTE.md
