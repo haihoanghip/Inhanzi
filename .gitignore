@@ -1,6 +1,6 @@
 # Environment
 backend/.env
-frontend/.env
+frontend-lnhanzi/.env
 
 # Node
 node_modules/
