@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+
+:root {
+    --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+    --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+    --mono: ui-monospace, Consolas, monospace;
+
+    --background-color: black;
+    --header-color: #0a0a0f;
+    --separation-color: #c9a84c2c;
+    --btn-color: rgb(229, 245, 128);
+    --color-menuphone: #2a3e43cc;
+    --text-color: #ccc;
+    --negative-color: #fff;
+    --logo-color: #ffb700;
+    --modal-color: #1b1b1b;
+    --btn-login: transparent;
+    --gold-light: #c9a84c;
+    --paper: #f7f3eb;
+    --modal-sub-color: rgba(255,255,255,0.7);
+    --modal-close-color: #fff;
+    --modal-border-color: #333;
+    --input-bg: rgba(247, 243, 235, .05);
+    --input-border: rgba(247, 243, 235, .15);
+
+    --header-height: 70px;
+    --max-width: 1182px;
+}
+
+.light-mode {
+    --background-color: #e7e7e7;
+    --header-color: rgb(170, 170, 170);
+    --separation-color: #0000002c;
+    --text-color: #333333;
+    --negative-color: #000000;
+    --logo-color: #5e4300;
+    --btn-login: rgb(0, 183, 34);
+    --btn-color: #fff;
+    --modal-color: #ffffffee;
+    --paper: #1a1a1a;
+    --gold-light: #8a6a00;
+    --modal-sub-color: #555555;
+    --modal-close-color: #333;
+    --modal-border-color: #ddd;
+    --input-bg: rgba(0, 0, 0, .04);
+    --input-border: rgba(0, 0, 0, .15);
+}
+
+html,
+body {
+    background-color: var(--background-color);
+    margin: 0;
+}
+
+button {
+    font-family: var(--heading);
+}
+
+a {
+    text-decoration: none;
+}

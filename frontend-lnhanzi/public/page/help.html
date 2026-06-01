@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trung tâm Hỗ trợ & Liên hệ</title>
+    <link rel="icon" href="./frontend/assets/images/logo/image.png" type="image/png">
+
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+            background-color: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24pt;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            width: 85%;
+            margin: -30px auto 0;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+            font-size: 16pt;
+        }
+
+        p {
+            font-size: 11pt;
+            margin-bottom: 15px;
+        }
+
+        .contact-grid {
+            display: block;
+            margin-top: 20px;
+        }
+
+        .contact-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+        }
+
+        .contact-card strong {
+            display: block;
+            font-size: 12pt;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+
+        .contact-card a {
+            color: #3498db;
+            text-decoration: none;
+            word-break: break-all;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 9pt;
+            color: #7f8c8d;
+            margin-top: 50px;
+            padding-bottom: 20px;
+        }
+
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href={import.meta.env.URL}>🔙 Quay về trang chủ</a>
+        <h1>TRUNG TÂM HỖ TRỢ</h1>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Hướng dẫn sử dụng</h2>
+            <p>Chào mừng bạn đến với trang hỗ trợ chính thức. Nếu bạn gặp bất kỳ khó khăn nào trong quá trình trải
+                nghiệm hoặc có thắc mắc, vui lòng tham khảo các kênh liên lạc dưới đây.</p>
+        </div>
+
+        <div class="section">
+            <h2>Thông tin liên hệ</h2>
+            <p>Để nhận được sự hỗ trợ nhanh nhất, bạn có thể kết nối qua các nền tảng sau:</p>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <strong>Facebook:</strong>
+                    <a href="https://www.facebook.com/hvhai0810">facebook.com/hvhai0810</a>
+                </div>
+
+                <div class="contact-card">
+                    <strong>TikTok:</strong>
+                    <a
+                        href="https://www.tiktok.com/@hoangvanhai695?is_from_webapp=1&sender_device=pc">@hoangvanhai695</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Câu hỏi thường gặp</h2>
+            <p><strong>Làm thế nào để phản hồi nhanh nhất?</strong><br>
+                Bạn nên nhắn tin trực tiếp qua Messenger Facebook để được hỗ trợ kịp thời.</p>
+
+            <p><strong>Tôi có thể xem các nội dung hướng dẫn ở đâu?</strong><br>
+                Các video chia sẻ và mẹo hữu ích thường xuyên được cập nhật trên kênh TikTok chính thức.</p>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Trang Hỗ Trợ Người Dùng.
+        </div>
+    </div>
+
+</body>
+
+</html>

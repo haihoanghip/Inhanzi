@@ -1,0 +1,71 @@
+RewriteEngine On
+RewriteBase /lnhanzi/
+
+# RewriteCond %{REQUEST_URI} !^/lnhanzi/update.html$
+# RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|svg|ico)$ [NC]
+# RewriteRule ^(.*)$ /lnhanzi/update.html [R=302,L]
+
+# ── Security Headers ─────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+    # Chống clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # Chống MIME sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    # Bật XSS filter trình duyệt cũ
+    Header always set X-XSS-Protection "1; mode=block"
+    # Ẩn thông tin server
+    Header always unset X-Powered-By
+    Header always unset Server
+    # Chỉ cho phép gửi cookie qua HTTPS (khi deploy production)
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ── Ẩn thông tin PHP ─────────────────────────────────────────────────────────
+<IfModule mod_php.c>
+    php_flag expose_php Off
+</IfModule>
+
+# 1. Chặn truy cập trực tiếp vào backend
+RewriteCond %{THE_REQUEST} \s/backend/ [NC]
+RewriteRule ^backend/ - [F,L]
+
+# 2. Chặn truy cập trực tiếp vào frontend/pages
+RewriteCond %{THE_REQUEST} \s/frontend/ [NC]
+RewriteRule ^frontend/ - [F,L]
+
+# Lưu URI gốc vào env var để PHP đọc
+RewriteCond %{REQUEST_URI} ^/lnhanzi/api/(.*)$
+RewriteRule ^ - [E=API_PATH:%1]
+
+# 3. API → index.php
+RewriteRule ^api/(.*)$ backend/Public/index.php [QSA,L]
+
+# 4. Admin
+RewriteRule ^admin$ frontend/pages/admin/guard.php [L]
+
+# 5. Dashboard
+RewriteRule ^dashboard$ frontend/pages/users/dashboard.php [L]
+
+# 6. HSK
+RewriteRule ^hsk_([1-6])$ frontend/pages/hsk/chuyenhuonghsk$1.php [L]
+
+# 7. Lesson
+RewriteRule ^hsk_([1-6])/(.+)$ frontend/pages/hsk/hsk_$1/$2 [L]
+
+# 8. OAuth
+RewriteRule ^oauth/callback$ /frontend/pages/auth/oauth-callback.html [L]
+
+# 9. Hide .php
+RewriteCond %{REQUEST_URI} !\.php$
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+# 10. Hide .html
+RewriteCond %{REQUEST_URI} !\.php$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.*)$ $1.html [L]
