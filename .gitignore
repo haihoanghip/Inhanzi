@@ -1,0 +1,19 @@
+# Environment
+backend/.env
+frontend/.env
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
+
+# Uploads
+backend/public/uploads/
+
+# Logs
+*.log
+
+# VSCode
+.vscode/
