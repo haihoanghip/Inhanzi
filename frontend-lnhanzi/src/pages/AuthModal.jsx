@@ -1,12 +1,14 @@
 import { useState, useRef } from 'react';
 import '../assets/css/base.css';
 import '../assets/css/main.css';
-import { loginUser, registerUser, loginWithGoogle } from '../api/auth';
+import { loginUser, registerUser } from '../api/auth';
 
 function AuthModal({ isOpen, type, onClose }) {
     const [showPassword, setShowPassword] = useState(false);
     const [strengthWidth, setStrengthWidth] = useState('0%');
     const [strengthColor, setStrengthColor] = useState('#ccc');
+    const [toast, setToast] = useState(null); // { type: 'success'|'error', message: string }
+    const [loading, setLoading] = useState(false);
 
     const loginEmailRef = useRef();
     const loginPasswordRef = useRef();
@@ -16,6 +18,11 @@ function AuthModal({ isOpen, type, onClose }) {
     const regConfirmRef = useRef();
 
     if (!isOpen || !type) return null;
+
+    const showToast = (type, message) => {
+        setToast({ type, message });
+        setTimeout(() => setToast(null), 4000);
+    };
 
     const handleStrengthCheck = (password) => {
         if (!password) { setStrengthWidth('0%'); return; }
@@ -31,26 +38,95 @@ function AuthModal({ isOpen, type, onClose }) {
     };
 
     const handleLogin = async () => {
-        const data = await loginUser({
-            email: loginEmailRef.current.value,
-            password: loginPasswordRef.current.value,
-        });
-        console.log('Login response:', data);
+        setLoading(true);
+        try {
+            const data = await loginUser({
+                email: loginEmailRef.current.value,
+                password: loginPasswordRef.current.value,
+            });
+
+            if (data.success) {
+                showToast('success', data.message || 'Đăng nhập thành công!');
+                setTimeout(() => {
+                    onClose();
+                    if (data.redirect_url) window.location.href = data.redirect_url;
+                }, 1200);
+            } else {
+                // Hiển thị lỗi validation hoặc message từ server
+                if (data.errors) {
+                    const errMsg = Object.values(data.errors).join(' • ');
+                    showToast('error', errMsg);
+                } else {
+                    showToast('error', data.message || 'Đăng nhập thất bại.');
+                }
+            }
+        } catch {
+            showToast('error', 'Không thể kết nối đến máy chủ. Vui lòng thử lại.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleRegister = async () => {
         const password = regPasswordRef.current.value;
         const confirm = regConfirmRef.current.value;
+
         if (password !== confirm) {
-            alert('Mật khẩu không khớp!');
+            showToast('error', 'Mật khẩu xác nhận không khớp!');
             return;
         }
-        const data = await registerUser({
-            username: regUsernameRef.current.value,
-            email: regEmailRef.current.value,
-            password,
-        });
-        console.log('Register response:', data);
+
+        setLoading(true);
+        try {
+            const data = await registerUser({
+                first_name: regUsernameRef.current.value,
+                email: regEmailRef.current.value,   // ✅ FIX: dùng đúng ref email
+                password,
+                password_confirm: confirm,
+            });
+
+            if (data.success) {
+                showToast('success', data.message || 'Tạo tài khoản thành công!');
+                setTimeout(() => {
+                    onClose();
+                    if (data.redirect_url) window.location.href = data.redirect_url;
+                }, 1200);
+            } else {
+                if (data.errors) {
+                    const errMsg = Object.values(data.errors).join(' • ');
+                    showToast('error', errMsg);
+                } else {
+                    showToast('error', data.message || 'Đăng ký thất bại.');
+                }
+            }
+        } catch {
+            showToast('error', 'Không thể kết nối đến máy chủ. Vui lòng thử lại.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleGoogleLogin = () => {
+        // ✅ FIX: Google dùng GET redirect, không phải fetch POST
+        const apiBase = import.meta.env.VITE_API_URL;
+        window.location.href = `${apiBase}/auth/google`;
+    };
+
+    const toastStyle = {
+        position: 'absolute',
+        top: '12px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        padding: '10px 18px',
+        borderRadius: '8px',
+        fontSize: '14px',
+        fontWeight: '500',
+        zIndex: 9999,
+        whiteSpace: 'nowrap',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+        transition: 'opacity 0.3s',
+        backgroundColor: toast?.type === 'success' ? '#2ecc71' : '#e74c3c',
+        color: '#fff',
     };
 
     return (
@@ -58,7 +134,10 @@ function AuthModal({ isOpen, type, onClose }) {
             {/* MODAL ĐĂNG NHẬP */}
             {type === 'login' && (
                 <div className="modal-overlay" onClick={() => onClose()}>
-                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()} style={{ position: 'relative' }}>
+
+                        {/* Toast thông báo */}
+                        {toast && <div style={toastStyle}>{toast.message}</div>}
 
                         <div className="modal-header">
                             <div>
@@ -101,9 +180,11 @@ function AuthModal({ isOpen, type, onClose }) {
                                 <a style={{ fontSize: '13px', color: 'var(--gold-light)', textDecoration: 'none', cursor: 'pointer' }}
                                     href="/forgotpassword">Quên mật khẩu?</a>
                             </div>
-                            <button type="submit" className="btn-submit">Đăng nhập</button>
+                            <button type="submit" className="btn-submit" disabled={loading}>
+                                {loading ? 'Đang xử lý...' : 'Đăng nhập'}
+                            </button>
                             <div className="form-divider"><span>hoặc</span></div>
-                            <button type="button" className="btn-google" onClick={loginWithGoogle}>
+                            <button type="button" className="btn-google" onClick={handleGoogleLogin}>
                                 <span className="google-icon"></span>
                                 Tiếp tục với Google
                             </button>
@@ -120,7 +201,10 @@ function AuthModal({ isOpen, type, onClose }) {
             {/* MODAL ĐĂNG KÝ */}
             {type === 'register' && (
                 <div className="modal-overlay" onClick={() => onClose()}>
-                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()} style={{ position: 'relative' }}>
+
+                        {/* Toast thông báo */}
+                        {toast && <div style={toastStyle}>{toast.message}</div>}
 
                         <div className="modal-header">
                             <div>
@@ -182,9 +266,11 @@ function AuthModal({ isOpen, type, onClose }) {
                                     autoComplete="new-password"
                                 />
                             </div>
-                            <button type="submit" className="btn-submit">Tạo tài khoản</button>
+                            <button type="submit" className="btn-submit" disabled={loading}>
+                                {loading ? 'Đang xử lý...' : 'Tạo tài khoản'}
+                            </button>
                             <div className="form-divider"><span>hoặc</span></div>
-                            <button type="button" className="btn-google" onClick={loginWithGoogle}>
+                            <button type="button" className="btn-google" onClick={handleGoogleLogin}>
                                 <span className="google-icon"></span>
                                 Đăng ký với Google
                             </button>

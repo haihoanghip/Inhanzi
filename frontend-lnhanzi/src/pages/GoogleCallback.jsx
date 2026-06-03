@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import API_BASE from '../api/config';
 import '../assets/css/main.css';
 
 const GoogleCallback = () => {
@@ -18,15 +19,12 @@ const GoogleCallback = () => {
                 setIsLoading(false);
                 setIsError(true);
                 setMessage(decodeURIComponent(errorParam));
-
-                setTimeout(() => {
-                    navigate('/');
-                }, 3000);
+                setTimeout(() => navigate('/'), 3000);
                 return;
             }
 
             try {
-                const res = await fetch('/lnhanzi/api/auth/me', {
+                const res = await fetch(`${API_BASE}/auth/me`, {
                     credentials: 'include'
                 });
                 const data = await res.json();
@@ -35,9 +33,7 @@ const GoogleCallback = () => {
                     throw new Error(data.message || 'Không xác thực được tài khoản');
                 }
 
-                const role = data.user.role;
-
-                if (role === 'admin') {
+                if (data.user.role === 'admin') {
                     navigate('/admin');
                 } else {
                     navigate('/dashboard');
@@ -47,10 +43,7 @@ const GoogleCallback = () => {
                 setIsLoading(false);
                 setIsError(true);
                 setMessage('Đăng nhập thất bại. Đang quay lại...');
-
-                setTimeout(() => {
-                    navigate('/');
-                }, 3000);
+                setTimeout(() => navigate('/'), 3000);
             }
         };
 

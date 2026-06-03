@@ -46,7 +46,7 @@ RewriteRule ^api/(.*)$ backend/Public/index.php [QSA,L]
 RewriteRule ^admin$ frontend/pages/admin/guard.php [L]
 
 # 5. Dashboard
-RewriteRule ^dashboard$ frontend/pages/users/dashboard.php [L]
+RewriteRule ^dashboard$ frontend-lnhanzi/src/pages/user/Dashboard.jsx [L]
 
 # 6. HSK
 RewriteRule ^hsk_([1-6])$ frontend/pages/hsk/chuyenhuonghsk$1.php [L]
@@ -69,3 +69,21 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.*)$ $1.html [L]
+
+Header set Access-Control-Allow-Origin "http://localhost:5173"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Trả 200 ngay cho OPTIONS, không vào PHP
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^ - [R=200,L]
+
+# Set CORS header ở tầng Apache
+Header always set Access-Control-Allow-Origin "http://localhost:5173"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+Header always set Access-Control-Allow-Credentials "true"

@@ -1,7 +1,7 @@
 {
   "name": "frontend-lnhanzi",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.16.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

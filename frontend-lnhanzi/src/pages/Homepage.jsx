@@ -170,7 +170,17 @@ function HomePage({ onOpenModal }) {
             <footer className="footer">
                 <div className="footer-logo">漢語學習 · HSK Learning</div>
                 <div className="footer-copy">© 2026 HSK Learning Platform · Học tiếng Trung mỗi ngày</div>
+
             </footer>
+            <p style={{
+                color: '#13c2c2f0', display: 'flex',
+                justifyContent: 'end', zIndex: '1000',
+                fontSize: '1rem', marginRight: '20px', 
+                userSelect: "none",
+
+            }}>
+                Version {import.meta.env.VITE_APP_VERSION}
+            </p>
         </>
     );
 }
